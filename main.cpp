@@ -1,3 +1,5 @@
+// Incluindo bibliotecas necess√°rias para a execu√ß√£o do projeto:
+
 #include <iostream>
 #include <locale.h>
 #include <fstream>
@@ -6,39 +8,39 @@
 
 using namespace std;
 
-struct Produto {
-    string nome;
-    double preco;
-    int estoque;
-    bool precoPorKg; // true = por kg, false = por unidade
+struct Produto { //Defini√ß√£o da estrutura que reresenta um produto
+    string nome; //Tipo de vari√°vel utilizado para nomear o produto
+    double preco; //Tipo de vari√°vel utilizado para atribuir pre√ßo ao produto
+    int estoque; //Tipo de vari√°vel utilizado para atribuir um n√∫mero inteiro ao estoque
+    bool precoPorKg; // true = por kg, false = por unidade (utilizado booleanos para verifica√ß√£o)
 };
 
-vector<Produto> produtos;
+vector<Produto> produtos; // Acessando o banco de dados com os produtos j√° cadastrados.
 
-void exibirMenu();
-void cadastrarProduto();
-void editarProduto();
-void excluirProduto();
-void exibirProdutos();
-void salvarProdutosCSV();
-double comprarProduto();
-void finalizarCompra(double totalCompra);
-void salvarCompraCSV(double totalCompra);
+void exibirMenu(); // Fun√ß√£o de chamada do menu do software
+void cadastrarProduto(); // Fun√ß√£o utilizada para cadastar o produto.
+void editarProduto(); // Fun√ß√£o utilizada para editar produtos j√° cadastrados, solicitado o n√∫mero do produto a ser editado.
+void excluirProduto(); // Fun√ß√£o utilizada para excluir produtos j√° cadastrados.
+void exibirProdutos(); // Fun√ß√£o utilizada para exibir produtos j√° cadastrados.
+void salvarProdutosCSV(); // Salva os produtos em um arquivo CSV (aten√ß√£o essa op√ß√£o permite vizualiza√ß√£o direta por planilhas, mas em caso de muitos dados pode apresentar uma exibi√ß√£o polu√≠da).
+double comprarProduto(); // Permite ao usu√°rio comprar um produto. Exibe os produtos e solicita o n√∫mero do produto e a quantidade desejada, verificando se h√° estoque suficiente. Retorna o custo total da compra.
+void finalizarCompra(double totalCompra); //Finaliza a compra, perguntando ao usu√°rio como deseja pagar (√† vista ou a prazo). Calcula o total e salva os dados da compra em um arquivo CSV.
+void salvarCompraCSV(double totalCompra); //Salva o total da compra em um arquivo CSV chamado compra.csv. (gera uma nota da compra para o cliente).
 
-bool verificarAdministrador();
-void modoAdministrador();
+bool verificarAdministrador(); // Verifica a configura√ß√£o exata para acessar o modo admistrador (Verifica a senha inserida pelo usu√°rio)
+void modoAdministrador(); // Caso aprovado a fun√ß√£o de verifica√ß√£o, acessa o menu do administrador com suas respectivas fun√ß√µes.
 
 void exibirMenu() {
     cout << "\n*****************************************\n";
-    cout << "|        Quintandinha MaÁ„ Amarela         |\n";
+    cout << "|        Quintandinha MaÔøΩÔøΩ Amarela         |\n";
     cout << "*****************************************\n";
-    cout << "Digite a opÁ„o desejada:\n";
+    cout << "Digite a opÔøΩÔøΩo desejada:\n";
     cout << "1. Acessar modo administrador\n";
     cout << "2. Comprar produto\n";
     cout << "3. Finalizar compra\n";
     cout << "4. Cancelar compra\n";
     cout << "*****************************************\n";
-    cout << "OpÁ„o:";
+    cout << "OpÔøΩÔøΩo:";
 }
 
 bool verificarAdministrador() {
@@ -62,7 +64,7 @@ void modoAdministrador() {
         cout << "3. Excluir produto\n";
         cout << "4. Exibir produtos\n";
         cout << "5. Voltar ao menu principal\n";
-        cout << "OpÁ„o: ";
+        cout << "OpÔøΩÔøΩo: ";
         cin >> opcAdmin;
 
         switch (opcAdmin) {
@@ -85,7 +87,7 @@ void modoAdministrador() {
                 cout << "Voltando ao menu principal...\n";
                 break;
             default:
-                cout << "OpÁ„o inv·lida!\n";
+                cout << "OpÔøΩÔøΩo invÔøΩlida!\n";
         }
     } while (opcAdmin != 5);
 }
@@ -95,12 +97,12 @@ void cadastrarProduto() {
     int tipoPreco;
     cout << "Digite o nome do produto: ";
     cin.ignore(); // Limpa o buffer antes de usar getline
-    getline(cin, produto.nome); // permitir espaÁos no nome do produto
-    cout << "Digite o tipo de preÁo: \n1. Por kg\n2. Por unidade\n";
+    getline(cin, produto.nome); // permitir espaÔøΩos no nome do produto
+    cout << "Digite o tipo de preÔøΩo: \n1. Por kg\n2. Por unidade\n";
     cin >> tipoPreco;
     produto.precoPorKg = (tipoPreco == 1);
 
-    cout << "Digite o preÁo do produto: ";
+    cout << "Digite o preÔøΩo do produto: ";
     cin >> produto.preco;
     cout << "Digite a quantidade em estoque: ";
     cin >> produto.estoque;
@@ -112,11 +114,11 @@ void cadastrarProduto() {
 void editarProduto() {
     exibirProdutos();
     int opcaoProduto;
-    cout << "Digite o n˙mero do produto que deseja editar: ";
+    cout << "Digite o nÔøΩmero do produto que deseja editar: ";
     cin >> opcaoProduto;
 
     if (opcaoProduto < 1 || opcaoProduto > produtos.size()) {
-        cout << "Produto inv·lido!\n";
+        cout << "Produto invÔøΩlido!\n";
         return;
     }
 
@@ -125,14 +127,14 @@ void editarProduto() {
     cin.ignore(); // Limpa o buffer antes de usar getline
     getline(cin, produto.nome);
 
-    cout << "Digite o novo preÁo do produto (atual: R$" << produto.preco << "): ";
+    cout << "Digite o novo preÔøΩo do produto (atual: R$" << produto.preco << "): ";
     cin >> produto.preco;
 
     cout << "Digite a nova quantidade em estoque (atual: " << produto.estoque << "): ";
     cin >> produto.estoque;
 
     int tipoPreco;
-    cout << "Digite o tipo de preÁo (atual: " << (produto.precoPorKg ? "por kg" : "por unidade") << "): \n1. Por kg\n2. Por unidade\n";
+    cout << "Digite o tipo de preÔøΩo (atual: " << (produto.precoPorKg ? "por kg" : "por unidade") << "): \n1. Por kg\n2. Por unidade\n";
     cin >> tipoPreco;
     produto.precoPorKg = (tipoPreco == 1);
 
@@ -142,16 +144,16 @@ void editarProduto() {
 void excluirProduto() {
     exibirProdutos();
     int opcaoProduto;
-    cout << "Digite o n˙mero do produto que deseja excluir: ";
+    cout << "Digite o nÔøΩmero do produto que deseja excluir: ";
     cin >> opcaoProduto;
 
     if (opcaoProduto < 1 || opcaoProduto > produtos.size()) {
-        cout << "Produto inv·lido!\n";
+        cout << "Produto invÔøΩlido!\n";
         return;
     }
 
     produtos.erase(produtos.begin() + opcaoProduto - 1);
-    cout << "Produto excluÌdo com sucesso!\n";
+    cout << "Produto excluÔøΩdo com sucesso!\n";
 }
 
 void salvarProdutosCSV() {
@@ -172,9 +174,9 @@ void salvarProdutosCSV() {
 }
 
 void exibirProdutos() {
-    cout << "Produtos disponÌveis:\n";
+    cout << "Produtos disponÔøΩveis:\n";
     for (size_t i = 0; i < produtos.size(); ++i) {
-        cout << i + 1 << ". " << produtos[i].nome << " - PreÁo: R$" << produtos[i].preco
+        cout << i + 1 << ". " << produtos[i].nome << " - PreÔøΩo: R$" << produtos[i].preco
              << (produtos[i].precoPorKg ? " por Kg" : " por unidade")
              << " - Estoque: " << produtos[i].estoque << "\n";
     }
@@ -183,10 +185,10 @@ void exibirProdutos() {
 double comprarProduto() {
     exibirProdutos();
     int opcaoProduto, quantidade;
-    cout << "Digite o n˙mero do produto que deseja comprar: ";
+    cout << "Digite o nÔøΩmero do produto que deseja comprar: ";
     cin >> opcaoProduto;
     if (opcaoProduto < 1 || opcaoProduto > produtos.size()) {
-        cout << "Produto inv·lido!\n";
+        cout << "Produto invÔøΩlido!\n";
         return 0;
     }
     Produto& produtoEscolhido = produtos[opcaoProduto - 1];
@@ -214,27 +216,27 @@ void finalizarCompra(double totalCompra) {
     }
     int opcPgto;
     cout << "Total da compra: R$" << totalCompra << "\n";
-    cout << "Digite a opÁ„o de pagamento:\n";
-    cout << "1. Pagamento ‡ vista (15% de desconto)\n";
-    cout << "2. Pagamento ‡ prazo\n";
+    cout << "Digite a opÔøΩÔøΩo de pagamento:\n";
+    cout << "1. Pagamento ÔøΩ vista (15% de desconto)\n";
+    cout << "2. Pagamento ÔøΩ prazo\n";
     cout << "*******************************\n";
-    cout << "OpÁ„o:";
+    cout << "OpÔøΩÔøΩo:";
     cin >> opcPgto;
 
     switch (opcPgto) {
         case 1:
             totalCompra *= 0.85;
-            cout << "Total ‡ vista: R$ " << totalCompra << "\n";
+            cout << "Total ÔøΩ vista: R$ " << totalCompra << "\n";
             break;
         case 2: {
             int numParcelas;
-            cout << "N˙mero de parcelas:";
+            cout << "NÔøΩmero de parcelas:";
             cin >> numParcelas;
-            cout << "Total ‡ prazo: " << numParcelas << " x de R$ " << (totalCompra / numParcelas) << "\n";
+            cout << "Total ÔøΩ prazo: " << numParcelas << " x de R$ " << (totalCompra / numParcelas) << "\n";
             break;
         }
         default:
-            cout << "OpÁ„o inv·lida!\n";
+            cout << "OpÔøΩÔøΩo invÔøΩlida!\n";
             return;
     }
 
@@ -276,13 +278,13 @@ int main() {
                 break;
             case 3:
                 finalizarCompra(totalCompra);
-                opc = 4; // Sair apÛs finalizar a compra
+                opc = 4; // Sair apÔøΩs finalizar a compra
                 break;
             case 4:
                 cout << "Compra cancelada\n";
                 break;
             default:
-                cout << "OpÁ„o inv·lida!\n";
+                cout << "OpÔøΩÔøΩo invÔøΩlida!\n";
         }
     } while (opc != 4);
 
