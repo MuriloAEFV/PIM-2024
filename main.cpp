@@ -349,7 +349,7 @@ int main() {
         }
     } while (opc != 4);
 
-    cout << "Obrigado e Volte Sempre..." << endl; // <-- finaliza o programa
+    cout << "Obrigado por escolher nossa quitandinha, Volte Sempre..." << endl; // <-- finaliza o programa
     return 0;
 }
 
