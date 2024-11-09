@@ -1,2 +1,6 @@
 Nome,Preco,Estoque,PrecoPorKg
+<<<<<<< HEAD
 Maá∆ Amarela,1.99,9,Unidade
+=======
+Banana,19,90,Kg
+>>>>>>> 7f9e981 (Atualizando coment√°rios, e corrigindo problemas no c√≥digo do PIM)

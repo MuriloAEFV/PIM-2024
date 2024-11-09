@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1731184759 source:c:\users\vieir\documents\pim\pim\main.cpp
+	<iostream>
+	<locale.h>
+	<fstream>
+	<vector>
+	<string>
+
