@@ -62,15 +62,15 @@ void modoAdministrador();
 
 // exibir menu usado para o menu de opções
 void exibirMenu() {
-    cout << "\n*****************************************\n";
+    cout << "\n*\n";
     cout << "|        Quintandinha Maçã Amarela         |\n";
-    cout << "*****************************************\n";
+    cout << "*\n";
     cout << "Digite a opção desejada:\n";
     cout << "1. Acessar modo administrador\n";
     cout << "2. Comprar produto\n";
     cout << "3. Finalizar compra\n";
     cout << "4. Cancelar compra\n";
-    cout << "*****************************************\n";
+    cout << "*\n";
     cout << "Opção:";
 }
 
@@ -208,7 +208,7 @@ void salvarProdutosCSV() {
     }
 
     arquivo.close();
-    //cout << "Produtos salvos em produtos.csv\n"; -  teste para verificar se estava salvando
+    cout << "Produtos salvos em produtos.csv\n";
 }
 
 // menu de exibição dos produtos já cadastrados
@@ -263,32 +263,32 @@ double comprarProduto(vector<Produto>& produtosComprados) {
 }
 
 
-// menu de finalização de compra / já com o CSV para obter dados de compra concluída
-void finalizarCompra(double totalCompra) {
-    if (totalCompra <= 0) {  // Verifica se a compra não tem valor positivo
-        cout << "Erro: Nenhum produto foi comprado. A compra não pode ser finalizada.\n";
-        return;  // Retorna sem fazer nada se a compra for inválida
-    }
 
+// menu de finalização de compra / ja com o csv para obter dados de compra concluida
+void finalizarCompra(double totalCompra) {
+    if (totalCompra == 0) {
+        cout << "Nenhum produto foi comprado.\n";
+        return;
+    }
     int opcPgto;
     cout << "Total da compra: R$" << totalCompra << "\n";
     cout << "Digite a opção de pagamento:\n";
-    cout << "1. Pagamento à vista (15% de desconto)\n";
-    cout << "2. Pagamento a prazo\n";
-    cout << "*******************************\n";
-    cout << "Opção: ";
+    cout << "1. Pagamento á vista (15% de desconto)\n";
+    cout << "2. Pagamento á prazo\n";
+    cout << "*\n";
+    cout << "Opção:";
     cin >> opcPgto;
 
     switch (opcPgto) {
         case 1:
             totalCompra *= 0.85;
-            cout << "Total à vista: R$ " << totalCompra << "\n";
+            cout << "Total á vista: R$ " << totalCompra << "\n";
             break;
         case 2: {
             int numParcelas;
-            cout << "Número de parcelas: ";
+            cout << "Número de parcelas:";
             cin >> numParcelas;
-            cout << "Total a prazo: " << numParcelas << " x de R$ " << (totalCompra / numParcelas) << "\n";
+            cout << "Total á prazo: " << numParcelas << " x de R$ " << (totalCompra / numParcelas) << "\n";
             break;
         }
         default:
@@ -297,7 +297,7 @@ void finalizarCompra(double totalCompra) {
     }
 
     salvarCompraCSV(totalCompra);
-    cout << "Compra finalizada !\n";
+    //cout << "Compra finalizada e salva no arquivo CSV!\n"; // eu tava usando para testar se deu certo o codigo
 }
 
 // salva as comprar com opção de caso o arquivo de csv der erro exibir mensagem de erro.
@@ -349,7 +349,6 @@ int main() {
         }
     } while (opc != 4);
 
-    cout << "Obrigado por escolher nossa quitandinha, Volte Sempre..." << endl; // <-- finaliza o programa
+    cout << "Obrigado e Volte Sempre..." << endl; // <-- finaliza o programa
     return 0;
 }
-
