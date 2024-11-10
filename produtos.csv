@@ -1,10 +1,4 @@
 Nome,Preco,Estoque,PrecoPorKg
-<<<<<<< HEAD
-Banana,19,90,Kg
-=======
-<<<<<<< HEAD
-Ma‡Æ Amarela,1.99,9,Unidade
-=======
-Banana,19,90,Kg
->>>>>>> 7f9e981 (Atualizando comentÃ¡rios, e corrigindo problemas no cÃ³digo do PIM)
->>>>>>> eda70daf5ee8f759ccc72f2dd9958cf7e24fecde
+Banana,20,150,Kg
+Maca Golden,30,90,Kg
+Pera,2,60,Unidade

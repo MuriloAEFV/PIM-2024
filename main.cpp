@@ -8,32 +8,23 @@
 
 using namespace std;
 
-     //Definição da estrutura que reresenta um produto
+// Definição da estrutura que representa um produto
 struct Produto {
-
-    //Tipo de variável utilizado para nomear o produto
     string nome;
-
-    //Tipo de variável utilizado para atribuir preço ao produto
     double preco;
-
-    //Tipo de variável utilizado para atribuir um número inteiro ao estoque
     int estoque;
-
-    // true = por kg, false = por unidade (utilizado booleanos para verificação)
     bool precoPorKg;
 };
 
- // Acessando o banco de dados com os produtos já cadastrados.
-vector<Produto> produtos;
+vector<Produto> produtos; // Vetor de produtos cadastrados
 
- // Função de chamada do menu do software
+// Função de chamada do menu do software
 void exibirMenu();
 
- // Função utilizada para cadastar o produto.
+// Função utilizada para cadastrar o produto.
 void cadastrarProduto();
 
-// Função utilizada para editar produtos já cadastrados, solicitado o número do produto a ser editado.
+// Função utilizada para editar produtos já cadastrados.
 void editarProduto();
 
 // Função utilizada para excluir produtos já cadastrados.
@@ -42,29 +33,82 @@ void excluirProduto();
 // Função utilizada para exibir produtos já cadastrados.
 void exibirProdutos();
 
- // Salva os produtos em um arquivo CSV (atenção essa opção permite vizualização direta por planilhas, mas em caso de muitos dados pode apresentar uma exibição poluída).
+// Salva os produtos em um arquivo CSV.
 void salvarProdutosCSV();
 
 // Permite ao usuário comprar um produto. Exibe os produtos e solicita o número do produto e a quantidade desejada, verificando se há estoque suficiente. Retorna o custo total da compra.
 double comprarProduto();
 
-//Finaliza a compra, perguntando ao usuário como deseja pagar (à vista ou a prazo). Calcula o total e salva os dados da compra em um arquivo CSV.
+// Finaliza a compra, mostrando o total da compra com todos os produtos escolhidos.
 void finalizarCompra(double totalCompra);
 
- //Salva o total da compra em um arquivo CSV chamado compra.csv. (gera uma nota da compra para o cliente).
+// Salva o total da compra em um arquivo CSV chamado compra.csv.
 void salvarCompraCSV(double totalCompra);
 
- // Verifica a configuração exata para acessar o modo admistrador (Verifica a senha inserida pelo usuário)
-bool verificarAdministrador();
+// Função para carregar os produtos a partir do arquivo CSV
+void carregarProdutosCSV() {
+    ifstream arquivo("produtos.csv");
 
- // Caso aprovado a função de verificação, acessa o menu do administrador com suas respectivas funções.
-void modoAdministrador();
+    if (!arquivo.is_open()) {
+        cout << "Erro ao abrir o arquivo produtos.csv para leitura.\n";
+        return;
+    }
 
-// exibir menu usado para o menu de opções
+    string linha;
+    // Ignora o cabeçalho do CSV
+    getline(arquivo, linha);
+
+    // Lê os produtos do arquivo
+    while (getline(arquivo, linha)) {
+        Produto produto;
+        size_t pos = 0;
+        // Nome do produto
+        pos = linha.find(",");
+        produto.nome = linha.substr(0, pos);
+        linha.erase(0, pos + 1);
+
+        // Preço do produto
+        pos = linha.find(",");
+        produto.preco = stod(linha.substr(0, pos));
+        linha.erase(0, pos + 1);
+
+        // Estoque do produto
+        pos = linha.find(",");
+        produto.estoque = stoi(linha.substr(0, pos));
+        linha.erase(0, pos + 1);
+
+        // Tipo de preço (por kg ou por unidade)
+        produto.precoPorKg = (linha == "Kg");
+
+        // Adiciona o produto ao vetor de produtos
+        produtos.push_back(produto);
+    }
+
+    arquivo.close();
+    //cout << "Produtos carregados de produtos.csv\n"; teste do produto
+}
+
+// Função para salvar os produtos em um arquivo CSV
+void salvarProdutosCSV() {
+    ofstream arquivo("produtos.csv");
+
+    if (!arquivo.is_open()) {
+        cout << "Erro ao abrir o arquivo para salvar produtos.\n";
+        return;
+    }
+
+    arquivo << "Nome,Preco,Estoque,PrecoPorKg\n";
+    for (const auto& produto : produtos) {
+        arquivo << produto.nome << "," << produto.preco << "," << produto.estoque << "," << (produto.precoPorKg ? "Kg" : "Unidade") << "\n";
+    }
+
+    arquivo.close();
+    cout << "Produtos salvos em produtos.csv\n";
+}
+
+// Função para exibir o menu
 void exibirMenu() {
-    cout << "\n*\n";
-    cout << "|        Quintandinha Maçã Amarela         |\n";
-    cout << "*\n";
+    cout << "******| Quintandinha Maçã Amarela |****** \n";
     cout << "Digite a opção desejada:\n";
     cout << "1. Acessar modo administrador\n";
     cout << "2. Comprar produto\n";
@@ -74,16 +118,18 @@ void exibirMenu() {
     cout << "Opção:";
 }
 
-// verificasor de usuário administrador
+// Função para verificar a senha de administrador
 bool verificarAdministrador() {
     string senha;
     cout << "Digite a senha de administrador: ";
     cin >> senha;
-    return senha == "admin123"; // <---- senha do administrador!
+    return senha == "123"; // senha do administrador
 }
 
-// opções do modo de administrador
+// Função para o modo administrador
 void modoAdministrador() {
+    carregarProdutosCSV();
+
     if (!verificarAdministrador()) {
         cout << "Acesso negado. Senha incorreta.\n";
         return;
@@ -100,7 +146,6 @@ void modoAdministrador() {
         cout << "Opção: ";
         cin >> opcAdmin;
 
-// usado para menu de opções switch case
         switch (opcAdmin) {
             case 1:
                 cadastrarProduto();
@@ -126,13 +171,13 @@ void modoAdministrador() {
     } while (opcAdmin != 5);
 }
 
-// acesso ao painel cadastrar os produtos
+// Função para cadastrar um produto
 void cadastrarProduto() {
     Produto produto;
     int tipoPreco;
     cout << "Digite o nome do produto: ";
-    cin.ignore(); // <--- Limpa o buffer antes de usar getline
-    getline(cin, produto.nome); // <---- permitir espaços no nome do produto
+    cin.ignore(); // Limpa o buffer antes de usar getline
+    getline(cin, produto.nome);
     cout << "Digite o tipo de preço: \n1. Por kg\n2. Por unidade\n";
     cin >> tipoPreco;
     produto.precoPorKg = (tipoPreco == 1);
@@ -146,8 +191,7 @@ void cadastrarProduto() {
     cout << "Produto cadastrado com sucesso!\n";
 }
 
-
-// menu de alterar o produto já cadastrado
+// Função para editar um produto
 void editarProduto() {
     exibirProdutos();
     int opcaoProduto;
@@ -160,25 +204,34 @@ void editarProduto() {
     }
 
     Produto& produto = produtos[opcaoProduto - 1];
-    cout << "Digite o novo nome do produto (atual: " << produto.nome << "): ";
-    cin.ignore(); // <---- Limpa o buffer antes de usar getline
-    getline(cin, produto.nome);
 
-    cout << "Digite o novo preço do produto (atual: R$" << produto.preco << "): ";
-    cin >> produto.preco;
+    int opcaoAlterar;
+    cout << "Deseja alterar o nome? (1 - Sim, 2 - Não): ";
+    cin >> opcaoAlterar;
+    if (opcaoAlterar == 1) {
+        cout << "Digite o novo nome do produto (atual: " << produto.nome << "): ";
+        cin.ignore(); // Limpa o buffer antes de usar getline
+        getline(cin, produto.nome);
+    }
 
-    cout << "Digite a nova quantidade em estoque (atual: " << produto.estoque << "): ";
-    cin >> produto.estoque;
+    cout << "Deseja alterar o preço? (1 - Sim, 2 - Não): ";
+    cin >> opcaoAlterar;
+    if (opcaoAlterar == 1) {
+        cout << "Digite o novo preço do produto (atual: R$" << produto.preco << "): ";
+        cin >> produto.preco;
+    }
 
-    int tipoPreco;
-    cout << "Digite o tipo de preço (atual: " << (produto.precoPorKg ? "por kg" : "por unidade") << "): \n1. Por kg\n2. Por unidade\n";
-    cin >> tipoPreco;
-    produto.precoPorKg = (tipoPreco == 1);
+    cout << "Deseja alterar o estoque? (1 - Sim, 2 - Não): ";
+    cin >> opcaoAlterar;
+    if (opcaoAlterar == 1) {
+        cout << "Digite a nova quantidade em estoque (atual: " << produto.estoque << "): ";
+        cin >> produto.estoque;
+    }
 
     cout << "Produto editado com sucesso!\n";
 }
 
-// menu de "deletar"/ excluir um produto já cadastrado
+// Função para excluir um produto
 void excluirProduto() {
     exibirProdutos();
     int opcaoProduto;
@@ -194,118 +247,70 @@ void excluirProduto() {
     cout << "Produto excluído com sucesso!\n";
 }
 
-void salvarProdutosCSV() {
-    ofstream arquivo("produtos.csv");
-
-    if (!arquivo.is_open()) {
-        cout << "Erro ao abrir o arquivo para salvar produtos.\n";
-        return;
-    }
-
-    arquivo << "Nome,Preco,Estoque,PrecoPorKg\n";
-    for (const auto& produto : produtos) {
-        arquivo << produto.nome << "," << produto.preco << "," << produto.estoque << "," << (produto.precoPorKg ? "Kg" : "Unidade") << "\n";
-    }
-
-    arquivo.close();
-    cout << "Produtos salvos em produtos.csv\n";
-}
-
-// menu de exibição dos produtos já cadastrados
+// Função para exibir os produtos cadastrados
 void exibirProdutos() {
-    cout << "Produtos disponíveis:\n";
+    cout << "Produtos cadastrados:\n";
     for (size_t i = 0; i < produtos.size(); ++i) {
-        cout << i + 1 << ". " << produtos[i].nome << " - Preço: R$" << produtos[i].preco
-             << (produtos[i].precoPorKg ? " por Kg" : " por unidade")
-             << " - Estoque: " << produtos[i].estoque << "\n";
+        const Produto& produto = produtos[i];
+        cout << i + 1 << ". " << produto.nome << " - R$" << produto.preco << " - Estoque: " << produto.estoque << " - "
+             << (produto.precoPorKg ? "Por kg" : "Por unidade") << endl;
     }
 }
 
-//mostrar resumo da compra com nome e estoque
-void mostrarResumoCompra(const vector<Produto>& produtosComprados) {
-    cout << "Resumo da Compra:\n";
-    for (const auto& produto : produtosComprados) {
-        cout << produto.nome << " - " << produto.estoque << " unidades\n";
-    }
-}
-
-
-double comprarProduto(vector<Produto>& produtosComprados) {
+// Função para comprar um produto
+double comprarProduto(double& totalCompra) {
     exibirProdutos();
     int opcaoProduto, quantidade;
+
     cout << "Digite o número do produto que deseja comprar: ";
     cin >> opcaoProduto;
+
     if (opcaoProduto < 1 || opcaoProduto > produtos.size()) {
         cout << "Produto inválido!\n";
-        return 0;
+        return 0.0;
     }
-    Produto& produtoEscolhido = produtos[opcaoProduto - 1];
 
-    cout << "Digite a quantidade desejada" << (produtoEscolhido.precoPorKg ? " em Kg: " : " em unidades: ");
+    Produto& produto = produtos[opcaoProduto - 1];
+    cout << "Digite a quantidade que deseja comprar: ";
     cin >> quantidade;
 
-    if (quantidade > produtoEscolhido.estoque) {
+    if (quantidade > produto.estoque) {
         cout << "Quantidade em estoque insuficiente!\n";
-        return 0;
+        return 0.0;
     }
 
-    produtoEscolhido.estoque -= quantidade;
-    double custoTotal = quantidade * produtoEscolhido.preco;
-    cout << "Total parcial: R$ " << custoTotal << "\n";
+    double custoProduto = produto.preco * quantidade;
+    if (produto.precoPorKg) {
+        cout << "Preço por kg. Custo total: R$" << custoProduto << endl;
+    } else {
+        cout << "Preço por unidade. Custo total: R$" << custoProduto << endl;
+    }
 
-    // Adicionando o produto comprado ao vetor
-    Produto produtoComprado = produtoEscolhido;
-    produtoComprado.estoque = quantidade; // Atualiza o estoque com a quantidade comprada
-    produtosComprados.push_back(produtoComprado);
-
-    salvarProdutosCSV();
-    return custoTotal;
+    totalCompra += custoProduto;  // Acumulando o total da compra
+    produto.estoque -= quantidade; // Atualizando o estoque
+    return 0.0;  // Não precisa retornar o valor, pois estamos acumulando em totalCompra
 }
 
-
-
-// menu de finalização de compra / ja com o csv para obter dados de compra concluida
+// Função para finalizar a compra
+// Função para finalizar a compra
 void finalizarCompra(double totalCompra) {
-    if (totalCompra == 0) {
-        cout << "Nenhum produto foi comprado.\n";
-        return;
+    if (totalCompra > 0) {
+        cout << "Compra finalizada com sucesso! Total: R$" << totalCompra << endl;
+        salvarCompraCSV(totalCompra);
+        cout << "Obrigado pela compra! Volte sempre...\n";
+        exit(0);  // Encerra o programa após finalizar a compra
+    } else {
+        cout << "Nenhum produto foi comprado. A compra foi cancelada.\n";
     }
-    int opcPgto;
-    cout << "Total da compra: R$" << totalCompra << "\n";
-    cout << "Digite a opção de pagamento:\n";
-    cout << "1. Pagamento á vista (15% de desconto)\n";
-    cout << "2. Pagamento á prazo\n";
-    cout << "*\n";
-    cout << "Opção:";
-    cin >> opcPgto;
-
-    switch (opcPgto) {
-        case 1:
-            totalCompra *= 0.85;
-            cout << "Total á vista: R$ " << totalCompra << "\n";
-            break;
-        case 2: {
-            int numParcelas;
-            cout << "Número de parcelas:";
-            cin >> numParcelas;
-            cout << "Total á prazo: " << numParcelas << " x de R$ " << (totalCompra / numParcelas) << "\n";
-            break;
-        }
-        default:
-            cout << "Opção inválida!\n";
-            return;
-    }
-
-    salvarCompraCSV(totalCompra);
-    //cout << "Compra finalizada e salva no arquivo CSV!\n"; // eu tava usando para testar se deu certo o codigo
 }
 
-// salva as comprar com opção de caso o arquivo de csv der erro exibir mensagem de erro.
+
+// Função para salvar a compra em um arquivo CSV
 void salvarCompraCSV(double totalCompra) {
     ofstream arquivo("compra.csv");
 
     if (!arquivo.is_open()) {
-        cout << "Erro ao tentar salvar compra.\n";
+        cout << "Erro ao abrir o arquivo compra.csv para salvar os dados.\n";
         return;
     }
 
@@ -313,42 +318,44 @@ void salvarCompraCSV(double totalCompra) {
     arquivo << totalCompra << "\n";
 
     arquivo.close();
-    //cout << "Compra salva em compra.csv\n"; // eu tava usando para testar se deu certo o codigo
+    //cout << "Compra salva em compra.csv\n"; teste de csv
 }
 
-// estrutura principal
+// Função para cancelar a compra
+void cancelarCompra() {
+    cout << "Compra cancelada.\n";
+}
+
 int main() {
     setlocale(LC_ALL, "");
 
-    int opc;
-    double totalCompra = 0;
-    vector<Produto> produtosComprados; // Vetor para armazenar os produtos comprados
+// Carrega os produtos no início do programa
+    carregarProdutosCSV();
+
+    int opcao;
+    double totalCompra = 0.0;
 
     do {
         exibirMenu();
-        cin >> opc;
+        cin >> opcao;
 
-        switch (opc) {
+        switch (opcao) {
             case 1:
-                modoAdministrador(); // <--- Executa o modo administrador se a senha estiver correta
+                modoAdministrador();
                 break;
             case 2:
-                totalCompra += comprarProduto(produtosComprados); // Passa o vetor de produtos comprados
+                comprarProduto(totalCompra); // Passando o totalCompra por referência
                 break;
             case 3:
                 finalizarCompra(totalCompra);
-                // Exibe o resumo da compra
-                mostrarResumoCompra(produtosComprados); // Mostra o resumo antes de finalizar a compra
-                opc = 4; // <--- Sair após finalizar a compra
                 break;
             case 4:
-                cout << "Compra cancelada\n";
+                cancelarCompra();
                 break;
             default:
                 cout << "Opção inválida!\n";
         }
-    } while (opc != 4);
+    } while (opcao != 0);
 
-    cout << "Obrigado e Volte Sempre..." << endl; // <-- finaliza o programa
     return 0;
 }
