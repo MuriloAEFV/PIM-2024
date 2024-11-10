@@ -220,7 +220,7 @@ bool cancelarCompra()
         cin >> opcaoCancelamento;
 
         if (opcaoCancelamento == 1) {
-            cout << "Compra cancelada!\n";
+            cout << "Compra cancelada! Volte quando quiser.\n";
             return true;  // Retorna verdadeiro se a compra for cancelada
         } else if (opcaoCancelamento == 2) {
             cout << "Retornando ao menu principal...\n";

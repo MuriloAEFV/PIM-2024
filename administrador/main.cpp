@@ -38,7 +38,7 @@ bool verificarAdministrador()
     string senha;
     cout << "Digite a senha de administrador: ";
     cin >> senha;
-    return senha == "123";  // Verifica se a senha digitada é "123"
+    return senha == "admin123";  // Verifica se a senha digitada é "admin123"
 }
 
 // Função que gerencia o modo administrador, incluindo todas as operações de produtos
