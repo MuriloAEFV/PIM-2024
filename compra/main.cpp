@@ -21,7 +21,8 @@ void carregarProdutosCSV();
 void exibirProdutos();
 double comprarProduto(vector<Produto>& produtosComprados);
 void finalizarCompra(double totalCompra);
-void salvarCompraCSV(double totalCompra);  // Declaração da função que faltava
+void salvarCompraCSV(double totalCompra);
+void salvarProdutosCSV();  // Função para salvar o estoque atualizado
 
 // Função para verificar se uma string é um número válido
 bool isNumeroValido(const string& str) {
@@ -138,6 +139,26 @@ double comprarProduto(vector<Produto>& produtosComprados)
     return custoTotal;  // Retorna o custo total da compra
 }
 
+// Função para confirmar a finalização da compra
+bool confirmarFinalizacaoCompra()
+{
+    int opcaoConfirmacao;
+    cout << "Deseja finalizar a compra?\n1 - Sim\n2 - Não\n";
+    do {
+        cout << "Escolha uma opção: ";
+        cin >> opcaoConfirmacao;
+
+        if (opcaoConfirmacao == 1) {
+            return true;  // Retorna verdadeiro se o usuário confirmar a finalização
+        } else if (opcaoConfirmacao == 2) {
+            cout << "Retornando ao menu principal...\n";
+            return false;  // Retorna falso se o usuário não confirmar
+        } else {
+            cout << "Opção inválida! Tente novamente.\n";
+        }
+    } while (true);  // Continua até o usuário escolher uma opção válida
+}
+
 // Função para finalizar a compra
 void finalizarCompra(double totalCompra)
 {
@@ -147,8 +168,14 @@ void finalizarCompra(double totalCompra)
         return;
     }
 
-    cout << "Total da compra: R$" << totalCompra << "\n";
-    salvarCompraCSV(totalCompra);  // Registra a compra no arquivo CSV
+    if (confirmarFinalizacaoCompra()) {
+        cout << "Total da compra: R$" << totalCompra << "\n";
+        salvarCompraCSV(totalCompra);  // Registra a compra no arquivo CSV
+        salvarProdutosCSV();  // Atualiza o estoque no arquivo CSV
+        cout << "Compra finalizada com sucesso!\n";
+    } else {
+        cout << "Compra não finalizada.\n";
+    }
 }
 
 // Função para salvar a compra no arquivo CSV
@@ -162,6 +189,25 @@ void salvarCompraCSV(double totalCompra)
 
     arquivo << "Total Compra: R$" << totalCompra << "\n";
     arquivo.close();  // Fecha o arquivo após salvar a compra
+}
+
+// Função para salvar o estoque atualizado no arquivo CSV
+void salvarProdutosCSV()
+{
+    ofstream arquivo("../administrador/produtos.csv", ios::trunc);  // Abre o arquivo para sobrescrever
+    if (!arquivo.is_open()) {
+        cout << "Erro ao salvar o estoque.\n";
+        return;
+    }
+
+    arquivo << "Nome;Preço;Estoque;Tipo\n";  // Cabeçalho do CSV
+    for (const Produto& produto : produtos)
+    {
+        arquivo << produto.nome << ";" << produto.preco << ";" << produto.estoque << ";"
+                << (produto.precoPorKg ? "kg" : "unidade") << "\n";
+    }
+
+    arquivo.close();  // Fecha o arquivo após salvar
 }
 
 // Função para cancelar a compra com confirmação
