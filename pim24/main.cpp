@@ -118,6 +118,7 @@ void exibirMenu() {
     cout << "Opção:";
 }
 
+
 // Função para verificar a senha de administrador
 bool verificarAdministrador() {
     string senha;
