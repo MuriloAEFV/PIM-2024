@@ -137,6 +137,7 @@ int main() {
     // Chama a função para carregar os produtos do arquivo CSV
     carregarProdutosCSV();
 
+
     int opcao;
     do {
         cout << "\n--- Menu de Compras ---\n";
