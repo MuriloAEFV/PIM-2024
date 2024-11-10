@@ -1,9 +1,11 @@
 # depslib dependency file v1.0
-1731195113 source:c:\users\vieir\documents\pimm\administrador\main.cpp
+1731214689 source:c:\users\vieir\documents\pimm\administrador\main.cpp
 	<iostream>
 	<fstream>
 	<vector>
 	<string>
 	<sstream>
 	<locale.h>
+	<limits>
+	<algorithm>
 
