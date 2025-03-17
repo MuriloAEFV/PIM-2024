@@ -11,3 +11,15 @@
 	<ctime>
 	<sys/stat.h>
 
+1732139280 source:c:\users\loren\onedrive\documentos\pimm\administrador\main.cpp
+	<iostream>
+	<fstream>
+	<vector>
+	<string>
+	<sstream>
+	<locale.h>
+	<limits>
+	<algorithm>
+	<ctime>
+	<sys/stat.h>
+
